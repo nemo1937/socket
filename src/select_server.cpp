@@ -171,8 +171,8 @@ void start_server(int port)
 
 					FD_CLR(iter->client_fd, &rset);
 					vec_client.erase(iter);
-
-					break;
+					
+					continue;
 				}
 			}
 			else

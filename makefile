@@ -1,19 +1,47 @@
 
 CXX = g++
 
-CC_OPTS = -Wall -ggdb3 -std=c++11 -I./inc
+CC_OPTS = -Wall -ggdb3 -std=c++11 -I./inc 
 
 LIB = -pthread
 
-TARGET = select_client select_server
+ALIB = sw_tcp_socket_utils
+
+LPATH = ./lib
+
+TARGET = bin/select_client bin/select_server lib/libsw_tcp_socket_utils.a bin/sw_tcp_socket_server bin/sw_tcp_socket_client 
 
 all : $(TARGET)
 
 clean:
-	rm -rf *.o $(TARGET)
+	rm -rf src/*.o $(TARGET)
+	
+	
+lib/libsw_tcp_socket_utils.a : src/sw_tcp_socket_utils.o
+	# ar crv libmyAPI.a myAPI.o
+	@echo "complie utils.a"
+	ar  crv $@ $^
+	
+src/sw_tcp_socket_utils.o : src/sw_tcp_socket_utils.cpp
+	$(CXX)  $(CC_OPTS) -c -nostartfiles $^ -o $@
 
-select_client : src/select_client.cpp
+bin/select_client : src/select_client.cpp
 	$(CXX) $(CC_OPTS) $^ -o $@ $(LIB)
 	
-select_server : src/select_server.cpp
+bin/select_server : src/select_server.cpp
 	$(CXX) $(CC_OPTS) $^ -o $@
+	
+bin/sw_tcp_socket_server : src/sw_tcp_socket_server.o
+	$(CXX) -o $@ $^ -L$(LPATH) -l$(ALIB)
+
+src/sw_tcp_socket_server.o : src/sw_tcp_socket_server.cpp
+	$(CXX) $(CC_OPTS) -c $^ -o $@
+
+#src/sw_tcp_socket_utils.o : src/sw_tcp_socket_utils.cpp
+#	$(CXX) $(CC_OPTS) -c $^ -o $@
+
+bin/sw_tcp_socket_client : src/sw_tcp_socket_client.o
+	$(CXX)  $^ -o $@
+
+src/sw_tcp_socket_client.o : src/sw_tcp_socket_client.cpp
+	$(CXX) $(CC_OPTS) -c $^ -o $@
