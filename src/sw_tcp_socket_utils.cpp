@@ -67,13 +67,13 @@ int writen(int fd, const void *pstr, int len)
 	for (; ;)
 	{
 		nwrite = write(fd, pwrite, nleft);
-		if (nwrite < 0 && errno == EAGAIN)
+		if (nwrite < 0 && errno == EINTR)
 		{
 			log();
 			printf("strerrno: %s \n", strerror(errno));
 			continue;
 		}
-		else if (nwrite < 0) // failed.
+		else if (nwrite <= 0) // failed.
 		{
 			log();
 			printf("write error..%s \n", strerror(errno));
@@ -83,6 +83,12 @@ int writen(int fd, const void *pstr, int len)
 		{
 			nleft -= nwrite;
 			pwrite += nwrite;
+			if (nleft == 0)
+			{
+				log();
+				printf("finish send msg..\n");
+				break;
+			}
 		}
 	}
 

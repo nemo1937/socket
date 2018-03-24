@@ -20,6 +20,8 @@
 #include <time.h>
 //#include <pthread.h>
 #include <stdlib.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 #define SERVER_ADDR "/tmp/server.sock"
 #define MAXLINE 1024
