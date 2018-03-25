@@ -30,7 +30,8 @@ int readn(int fd, void *pstr, int len)
 			}
 			else //disconnect
 			{
-				return -1;
+				//return -1;
+				break;
 			}
 		}
 		else if (0 == nread) // EOF
@@ -146,6 +147,61 @@ again:
 		{
 			printf("client: %s. \n", buf);
 		}
+	}
+
+	return;
+}
+
+void str_echo(int fd)
+{
+	// readn
+	char buf[MAXLINE] = {0};
+	int nbytes = 0;
+again:
+	while ((nbytes = read(fd, buf, MAXLINE)) > 0)
+	{
+		log();
+		printf("buf: %s \n", buf);
+		writen(fd, buf, strlen(buf));
+		memset(buf, 0x00, sizeof(buf));
+	}
+	//int nbytes = read(fd, buf, MAXLINE);
+	if (nbytes < 0 && errno == EINTR)
+	{
+		goto again;
+	}
+	else if (nbytes < 0)
+	{
+		log();
+		printf("read failed...");
+	}
+
+	return;
+}
+
+void str_cli_echo(FILE *fp, int fd)
+{
+	char sendbuf[MAXLINE] = {0};
+	char readbuf[MAXLINE] = {0};
+
+	while(fgets(sendbuf, MAXLINE, fp) != NULL)
+	{
+		// writen
+		writen(fd, sendbuf, strlen(sendbuf));
+
+		// recv from server.
+		if (read(fd, readbuf, MAXLINE) > 0)
+		{
+			fputs(readbuf, stdout);
+		}
+		else
+		{
+			log();
+			printf("readn failed. \n");
+			break;
+		}
+		memset(sendbuf, 0x00, sizeof(sendbuf));
+		memset(readbuf, 0x00, sizeof(readbuf));
 	}
 
 	return;

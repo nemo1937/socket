@@ -27,7 +27,7 @@
 #define MAXLINE 1024
 
 
-#define log(fmt,...) printf("[%s\%s:%d]: "##fmt, __FILE__,  __FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define log(fmt,...) printf("[%s:%s:%d]: "##fmt, __FILE__,  __FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 int readn(int fd, void *pstr, int len);
 
@@ -54,3 +54,9 @@ void setnoblock(int fd);
 // Parameter: int fd
 //************************************
 void proccss_client(int fd);
+
+
+void str_echo(int fd);
+
+
+void str_cli_echo(FILE *fp, int fd);
