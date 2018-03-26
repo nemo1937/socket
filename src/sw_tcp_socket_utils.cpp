@@ -206,3 +206,11 @@ void str_cli_echo(FILE *fp, int fd)
 
 	return;
 }
+
+void str_cli_echo_select(FILE *fp, int sockfd)
+{
+//	int 
+
+
+	return;
+}

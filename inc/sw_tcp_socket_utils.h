@@ -60,3 +60,5 @@ void str_echo(int fd);
 
 
 void str_cli_echo(FILE *fp, int fd);
+
+void str_cli_echo_select(FILE *fp, int sockfd);
